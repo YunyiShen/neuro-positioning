@@ -4,13 +4,13 @@ Simu_data <- function(x,y,
                       width,
                       amplitude,
                       noisesd){
-  xx <- pic_x - x
+  xx <- pic_x - x # relative position of picture
   yy <- pic_y - y
   
   absorb <- (pnorm(xx+width,sd = bandwidth) - pnorm(xx-width,sd = bandwidth)) * 
-    (pnorm(yy+width,sd = bandwidth) - pnorm(yy-width,sd = bandwidth))
+    (pnorm(yy+width,sd = bandwidth) - pnorm(yy-width,sd = bandwidth)) # integral the picture over the kernel 
   
-  rnorm(1, mean = amplitude * absorb, sd = noisesd)
+  rnorm(1, mean = amplitude * absorb, sd = noisesd) # simulate data
 }
 
 pred_data <- function(x,y,
@@ -23,9 +23,9 @@ pred_data <- function(x,y,
   yy <- pic_y - y
   
   absorb <- (pnorm(xx+width,sd = bandwidth) - pnorm(xx-width,sd = bandwidth)) * 
-    (pnorm(yy+width,sd = bandwidth) - pnorm(yy-width,sd = bandwidth))
+    (pnorm(yy+width,sd = bandwidth) - pnorm(yy-width,sd = bandwidth)) # integral
   
-  amplitude * absorb
+  amplitude * absorb # average, no noise
 }
 
 log_Lik_single <- function(x,y,
@@ -39,9 +39,9 @@ log_Lik_single <- function(x,y,
   yy <- pic_y - y
   
   absorb <- (pnorm(xx+width,sd = bandwidth) - pnorm(xx-width,sd = bandwidth)) * 
-    (pnorm(yy+width,sd = bandwidth) - pnorm(yy-width,sd = bandwidth))
+    (pnorm(yy+width,sd = bandwidth) - pnorm(yy-width,sd = bandwidth)) # intergral
   
-  dnorm(obs, mean = amplitude * absorb, sd = noisesd,log = T)
+  dnorm(obs, mean = amplitude * absorb, sd = noisesd,log = T) # likelihood for one sample
   
 }
 
@@ -71,7 +71,7 @@ Simu_data_batch <- function(x,y,
   pic_pos,
   width,
   amplitude,
-  noisesd)
+  noisesd) # get a series of data given position of picture
 }
 
 pred_batch <- function(x,y,
@@ -99,7 +99,7 @@ pred_batch <- function(x,y,
   pic_pos,
   width,
   amplitude
-  )
+  ) # batch prediction 
 }
 
 log_Lik_batch <- function(obs_mat,x,y,
@@ -126,7 +126,7 @@ log_Lik_batch <- function(obs_mat,x,y,
   obs_mat,
   width,
   amplitude,
-  noisesd))
+  noisesd)) # batch log likelihood
 }
 
 prior_xy_unif <- function(x,y,log = TRUE){
