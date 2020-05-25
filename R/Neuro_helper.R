@@ -233,9 +233,10 @@ Main_sampler <- function(obs_mat, width, alpha, beta, prior_xy = prior_xy_unif,
         log_posterior_curr <- log_posterior_prop
       }
     }
-    
+    svMisc::progress((i-1)/(burn_in+n_iter)*100,progress.bar = T)
     if( i>burn_in &  (i-burn_in) %% thin_by==0){
-      cat(k/n_save,"\n")
+      #cat(k/n_save,"\n")
+      
       noisesd_mcmc[k,] <- noisesd_curr
       amplitude_mcmc[k,] <- amplitude_curr
       posi_mcmc[k,] <- posi_curr

@@ -1,7 +1,7 @@
 source("./R/Neuro_helper.R")
 
-bandwidth <- 0.2
-width <- .1
+bandwidth <- 0.1
+width <- .2
 
 posi <- c(.3,.5)
 
