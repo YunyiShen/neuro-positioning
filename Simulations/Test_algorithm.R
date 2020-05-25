@@ -1,4 +1,4 @@
-source("Neuro_helper.R")
+source("./R/Neuro_helper.R")
 posi <- c(0.3,0.5)
 bandwidth <- 0.2
 width <- 0.1
