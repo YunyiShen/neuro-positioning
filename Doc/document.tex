@@ -1,0 +1,100 @@
+\documentclass[]{article}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{float}
+%opening
+\title{Bayesian Neuro-Positioning}
+\author{Yunyi Shen}
+
+\begin{document}
+
+
+\section{Background}
+
+\section{Model}
+\subsection{Data Generating Process}
+In this model, pictures were modeled as a function (light strength) on $R^2$, particularly in the primary model, pictures were modeled as square with light strength $1$ and centered at its known position on unit square, $x_i$ and $y_i$ with a common width $d$ defined as distance from center to one edge. The picture $i$ was a function:
+\begin{equation}
+\label{picture}
+	f_i(x,y)=\begin{cases}
+	1 & |x-x_i|\le d \text{ and } |y-y_i|\le d\\
+	0 & \text{otherwise}
+	\end{cases}
+\end{equation}
+
+
+Perception center was modeled as a Gaussian kernel using 3 parameters, 1) position on x axis, $x_c\in [0,1]$, 2) position on y axis $y_c\in [0,1]$ and 3) concentration bandwidth $\gamma>0$. Note this kernel as $p_{\theta}(x,y)$ in which $\theta=(x_c,y_c,\gamma)$:
+
+\begin{equation}
+\label{neuro_center}
+	p_{\theta}(x,y)=\frac{1}{2\pi \gamma^2}exp(-\frac{(x-x_c)^2+(y-y_c)^2}{2\gamma^2})
+\end{equation}
+
+The expected response of the neuron network $Y_i$ was model as expectation of picture $f_i$ times some amplitude $a$ and add some Gaussian noise:
+
+\begin{equation}
+	Y_i=a\int f_i(x,y) p_{\theta}(x,y)dxdy + \epsilon_i
+\end{equation}
+
+in which $\epsilon_i \sim N(0,\sigma^2)$ i.i.d.
+
+Amplitude $a$ corresponds to the expected response when picture is infinitely large. Note that we can scale $a$ and $f_i$ at the same time without changing $EY_i$, thus we need to specify some convention on $f_i$, e.g. $\max_{x,y}f_i(x,y)=1$.
+
+As a summary, there are 5 parameters in this primary model, 1)-2) $(x_c, y_c)\in [0,1]\times [0,1]$: the center of perception 3) $\gamma$: bandwidth of perception kernel, 4) $a>0$: amplitude of signal and 5) $\sigma>0$ standard deviation of noise. 
+
+Data has three parts 1)-2) $(x_i,y_i)\in [0,1]\times[0,1]$: center of picture 3) $d>0$ common width of the picture.
+
+
+\subsection{Reconstruction}
+We take a Bayesian approach. Reconstruction means sample from the posterior of the parameters. $(x_c,y_c)$ had a uniform prior on unit square, $\gamma$ had an improper uniform prior on $[0,\infty)$, $a$ had an improper uniform prior on $[0,\infty)$, $\sigma$ had a conjugate prior of inverse Gamma with parameter $\alpha=1$, $\beta=1$. 
+
+Markov chain Monte Carlo method was used to sample from the posterior, all parameters except $\sigma$ was sampled using MH algorithm with a normal random walk proposal, while $\sigma$ was updated using conjugation.  
+
+
+\section{Primary result}
+
+Below simulation was done using $(x_c,y_c)=(0.3,0.5)$ (red square), bandwidth $\gamma=0.2$, amplitude $a=10$, noise standard deviation $\sigma=0.3$. Picture was put in grids on $0,1$ depends on the width of pictures. Each experiment had 5 repeats (i.e. pictures were put on each grid 5 times independently). 
+
+Black dots showed 500 posterior sample on the center, density plot showed the posterior distribution estimated for bandwidth $\gamma$. Background map showed the mean response of 5 repeats.
+
+
+
+
+
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{"Single_experiment/Small_image"}
+	\caption{Image width 0.1}
+	\label{fig:smallimage}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{"Single_experiment/Huge_image"}
+	\caption{Image width 0.25}
+	\label{fig:hugeimage}
+\end{figure}
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{"Single_experiment/Cannot_be_larger"}
+	\caption{Image width 0.5}
+	\label{fig:cannotbelarger}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{"Single_experiment/Game_over"}
+	\caption{Image width 1}
+	\label{fig:gameover}
+\end{figure}
+
+\end{document}
