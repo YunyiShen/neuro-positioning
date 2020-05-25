@@ -69,6 +69,7 @@ for(bandwidth in bandwidth_list){
       write.csv(y_c_post,paste0("./Simulations/Big_simu/bw_",bandwidth,"/w_",width,"/y_c.csv"))
       write.csv(sigma_post,paste0("./Simulations/Big_simu/bw_",bandwidth,"/w_",width,"/sigma.csv"))
       
+      cat("\n\n")
     }
     
   }
