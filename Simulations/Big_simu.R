@@ -9,7 +9,6 @@ width_list <- c(0.1,0.125,0.2,0.25,0.5)
 #bandwidth_list <- c(0.2)
 #width_list <- c(0.2)
 
-posi <- c(.3,.5)
 amplitude <- 10
 noisesd <- 0.3
 
@@ -32,6 +31,7 @@ for(bandwidth in bandwidth_list){
       matrix(NA,nrow = n_data_set,ncol = 500)
     experimentxy <- as.matrix( expand.grid(seq(0,1,width),seq(0,1,width)))
     for(i in 1:n_data_set){
+      posi = runif(2)
       cat("perception bandwidth =",bandwidth," picture width =",width," dataset number:",i,"\n\n")
       simu_list <- lapply(1:n_rep,function(foo,posi,
                                            bandwidth,
