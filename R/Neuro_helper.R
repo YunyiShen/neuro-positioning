@@ -150,10 +150,11 @@ Main_sampler <- function(obs_mat, width, alpha, beta, prior_xy = prior_xy_unif,
   bandwidth_mcmc <- mcmc(matrix(NA,nrow = n_save))
   log_lik_mcmc <- mcmc(matrix(NA,nrow = n_save))
   
-  noisesd_curr <- sqrt( 1/rgamma(1,alpha,beta)) # initial value of noise sd from prior
-  amplitude_curr <- rexp(1,0.1) # initial value for amplitude
-  posi_curr <- runif(2) # initial position 
-  bandwidth_curr <- rexp(1,1) # initial bandwidth
+  noisesd_curr <- sd(obs_mat[,3]) # initial value of noise sd 
+  bandwidth_curr <- max(dist(obs_mat[obs_mat[,3]>2*noisesd_curr,1:2]))[1]/1.96 # initial bandwidth
+  amplitude_curr <- max(obs_mat[,3])[1]/(pnorm(width,0,bandwidth_curr) - pnorm(-width,0,bandwidth_curr)) # initial value for amplitude, assuming maximum is maximum possible
+  posi_curr <- obs_mat[obs_mat[,3]==max(obs_mat[,3]),1:2] # initial position 
+  
   
   log_posterior_curr <- log_Lik_batch(obs_mat,posi_curr[1],posi_curr[2],
                                       bandwidth_curr,
